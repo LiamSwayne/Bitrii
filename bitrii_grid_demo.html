@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>YOUR GAME NAME HERE</title>
+    <style>
+        body {
+            background-color: #000000;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .grid-cell {
+            width: 20px;
+            height: 20px;
+            background-color: #FFFFFF;
+            border: 1px solid #000000;
+            box-sizing: border-box;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const gridContainer = document.createElement("div");
+            gridContainer.style.display = "grid";
+            gridContainer.style.gridTemplateColumns = "repeat(20, 20px)";
+            gridContainer.style.gridTemplateRows = "repeat(20, 20px)";
+            gridContainer.style.gap = "1px";
+
+            for (let i = 0; i < 20 * 20; i++) {
+                const cell = document.createElement("div");
+                cell.className = "grid-cell";
+                gridContainer.appendChild(cell);
+            }
+
+            document.body.appendChild(gridContainer);
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>
