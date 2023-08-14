@@ -12,11 +12,6 @@
             align-items: center;
             height: 100vh;
         }
-
-        .grid-cell {
-            background-color: #FFFFFF;
-            box-sizing: border-box;
-        }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -55,7 +50,7 @@
             gridContainer.style.display = "grid";
             gridContainer.style.gap = "0";
 
-            function updateGridSize() {
+            function scaleGrid() {
                 const windowHeight = window.innerHeight;
                 const windowWidth = window.innerWidth;
                 const minDimension = Math.min(windowHeight, windowWidth);
@@ -65,17 +60,19 @@
                 gridContainer.style.gridTemplateRows = `repeat(20, ${cellSize}px)`;
             }
 
-            window.addEventListener("resize", updateGridSize);
+            // scale grid to initial window size
+            scaleGrid();
 
-            updateGridSize();
+            // scale the grid every time the window is resized
+            window.addEventListener("resize", scaleGrid);
 
             for (let i = 0; i < 20 * 20; i++) {
                 const cell = document.createElement("div");
-                cell.className = "grid-cell";
+                cell.style.backgroundColor = "#AAAAAA";
 
                 // example of how to change the color of a grid element
                 if (i === 0) {
-                    cell.style.backgroundColor = "red";
+                    cell.style.backgroundColor = "#FFFFFF";
                 }
                 gridContainer.appendChild(cell);
             }
