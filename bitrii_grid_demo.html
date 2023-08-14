@@ -14,25 +14,45 @@
             height: 100vh;
         }
 
+        .grid-container {
+            display: grid;
+            gap: 0;
+        }
+
         .grid-cell {
-            width: 20px;
-            height: 20px;
             background-color: #FFFFFF;
-            border: 1px solid #000000;
             box-sizing: border-box;
+        }
+
+        .top-left-cell {
+            background-color: red;
         }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const gridContainer = document.createElement("div");
-            gridContainer.style.display = "grid";
-            gridContainer.style.gridTemplateColumns = "repeat(20, 20px)";
-            gridContainer.style.gridTemplateRows = "repeat(20, 20px)";
-            gridContainer.style.gap = "1px";
+            gridContainer.classList.add("grid-container");
+
+            function updateGridSize() {
+                const windowHeight = window.innerHeight;
+                const windowWidth = window.innerWidth;
+                const minDimension = Math.min(windowHeight, windowWidth);
+
+                const cellSize = Math.floor(minDimension / 20);
+                gridContainer.style.gridTemplateColumns = `repeat(20, ${cellSize}px)`;
+                gridContainer.style.gridTemplateRows = `repeat(20, ${cellSize}px)`;
+            }
+
+            window.addEventListener("resize", updateGridSize);
+
+            updateGridSize();
 
             for (let i = 0; i < 20 * 20; i++) {
                 const cell = document.createElement("div");
                 cell.className = "grid-cell";
+                if (i === 0) {
+                    cell.classList.add("top-left-cell");
+                }
                 gridContainer.appendChild(cell);
             }
 
