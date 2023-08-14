@@ -38,7 +38,7 @@
                 const windowWidth = window.innerWidth;
                 const minDimension = Math.min(windowHeight, windowWidth);
 
-                const cellSize = Math.floor(minDimension / 20);
+                const cellSize = minDimension / 20;
                 gridContainer.style.gridTemplateColumns = `repeat(20, ${cellSize}px)`;
                 gridContainer.style.gridTemplateRows = `repeat(20, ${cellSize}px)`;
             }
