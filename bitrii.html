@@ -48,7 +48,7 @@
     <!-- Engine -->
     <script>
         // create grid
-        const gridContainer = document.createElement("div");
+        gridContainer = document.createElement("div");
         gridContainer.style.display = "grid";
         gridContainer.style.gap = "0";
 
@@ -88,8 +88,8 @@
     <!-- Game -->
     <script>
         // SETTINGS
-        horizontalResolution = 40;
-        verticalResolution = 20;
+        const horizontalResolution = 64;
+        const verticalResolution = 36;
 
         // create the display
         initDisplay(horizontalResolution,verticalResolution);

@@ -8,8 +8,8 @@ A free, open source, low barrier to entry, pixel art game engine for creating ga
 
 Roadmap:
 - [x] Fullscreen button
-- [ ] Layer system.
-  - [ ] Base layer system.
-  - [ ] Collision syntax.
-  - [ ] Outline layers.<details><summary></summary>Layers that are dynamic outlines of other layers.</details>
-- [ ] IP address-based security feature for paid games.<details><summary></summary>To prevent piracy, downloads will be configured to only run on the downloader's IP address. This feature will be disabled by default, but can be enabled for paid software.</details>
+- [x] Display
+- [ ] Layer system
+  - [ ] Base layer system
+  - [ ] Collision groups (layers can collide with other layers in the same collision group)
+  - [ ] Outline layers <details><summary></summary>Layers that are dynamic outlines of other layers.</details>
