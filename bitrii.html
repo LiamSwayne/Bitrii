@@ -47,6 +47,43 @@
 
     <!-- Engine -->
     <script>
+        // layers are entities that are drawn to the display
+        class Layer {
+            // the order of the layers
+            static ordering = [];
+
+            // name is the name of the layer
+            // index is the position of the layer, -1 becomes the front
+            // show determines whether or not the layer is visible
+            constructor(name, index=-1, show=true) {
+                // layers must have unique names
+                if (Layer.ordering.includes(name)) {
+                    throw new Error('Layer with name \'' + name + '\' already exists.');
+                }
+
+                this.name = name;
+                this.index = index;
+                this.show = show;
+                Layer.ordering.splice(index, 0, name); // Add layer to ordering
+            }
+
+            prev() {
+                const prevIndex = this.index - 1;
+                if (prevIndex >= 0 && prevIndex < Layer.ordering.length) {
+                    return Layer.ordering[prevIndex];
+                }
+                return null; // No previous layer
+            }
+
+            next() {
+                const nextIndex = this.index + 1;
+                if (nextIndex >= 0 && nextIndex < Layer.ordering.length) {
+                    return Layer.ordering[nextIndex];
+                }
+                return null; // No next layer
+            }
+        }
+
         // create grid
         gridContainer = document.createElement("div");
         gridContainer.style.display = "grid";
@@ -70,52 +107,19 @@
             // scale the grid every time the window is resized
             window.addEventListener("resize", scaleGrid);
 
+            // TODO: replace with startup animation and utilize layer rendering
             for (let i = 0; i < xResolution * yResolution; i++) {
                 const cell = document.createElement("div");
                 cell.style.backgroundColor = "#AAAAAA";
 
                 // example of how to change the color of a grid element
-                if (i === 0) {
+                if (i == 0) {
                     cell.style.backgroundColor = "#FFFFFF";
                 }
                 gridContainer.appendChild(cell);
             }
 
             document.body.appendChild(gridContainer);
-        }
-
-        // layers are entities that are drawn to the display
-        class Layer {
-            // the order of the layers
-            static ordering = [];
-
-            constructor(name, index = 0) {
-                // layers must have unique names
-                if (Layer.ordering.includes(name)) {
-                    throw new Error('Layer with name \'' + name + '\' already exists.');
-                }
-
-                this.index = index;
-                this.name = name;
-                this.show = true;
-                Layer.ordering.splice(index, 0, name); // Add layer to ordering
-            }
-
-            prev() {
-                const prevIndex = this.index - 1;
-                if (prevIndex >= 0 && prevIndex < Layer.ordering.length) {
-                    return Layer.ordering[prevIndex];
-                }
-                return null; // No previous layer
-            }
-
-            next() {
-                const nextIndex = this.index + 1;
-                if (nextIndex >= 0 && nextIndex < Layer.ordering.length) {
-                    return Layer.ordering[nextIndex];
-                }
-                return null; // No next layer
-            }
         }
     </script>
 
