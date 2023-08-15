@@ -47,52 +47,58 @@
 
     <!-- Engine -->
     <script>
+        // create grid
         const gridContainer = document.createElement("div");
         gridContainer.style.display = "grid";
         gridContainer.style.gap = "0";
 
-            // create display
-            function initDisplay(xResolution,yResolution) {
+        // create display
+        function initDisplay(xResolution,yResolution) {
 
-                function scaleGrid() {
-                    const windowHeight = window.innerHeight;
-                    const windowWidth = window.innerWidth;
-                    const minDimension = Math.min(windowHeight, windowWidth);
+            function scaleGrid() {
+                const windowHeight = window.innerHeight;
+                const windowWidth = window.innerWidth;
+                const minDimension = Math.min(windowHeight, windowWidth);
 
-                    const cellSize = minDimension / xResolution;
-                    gridContainer.style.gridTemplateColumns = `repeat(${xResolution}, ${cellSize}px)`;
-                    gridContainer.style.gridTemplateRows = `repeat(${yResolution}, ${cellSize}px)`;
+                maxRes = xResolution;
+                if (yResolution > xResolution) {
+                    maxRes = yResolution;
                 }
 
-                // scale grid to initial window size
-                scaleGrid();
-
-                // scale the grid every time the window is resized
-                window.addEventListener("resize", scaleGrid);
-
-                for (let i = 0; i < xResolution * yResolution; i++) {
-                    const cell = document.createElement("div");
-                    cell.style.backgroundColor = "#AAAAAA";
-
-                    // example of how to change the color of a grid element
-                    if (i === 0) {
-                        cell.style.backgroundColor = "#FFFFFF";
-                    }
-                    gridContainer.appendChild(cell);
-                }
-
-                document.body.appendChild(gridContainer);
-
+                const cellSize = minDimension / maxRes;
+                gridContainer.style.gridTemplateColumns = `repeat(${xResolution}, ${cellSize}px)`;
+                gridContainer.style.gridTemplateRows = `repeat(${yResolution}, ${cellSize}px)`;
             }
 
+            // scale grid to initial window size
+            scaleGrid();
+
+            // scale the grid every time the window is resized
+            window.addEventListener("resize", scaleGrid);
+
+            for (let i = 0; i < xResolution * yResolution; i++) {
+                const cell = document.createElement("div");
+                cell.style.backgroundColor = "#AAAAAA";
+
+                // example of how to change the color of a grid element
+                if (i === 0) {
+                    cell.style.backgroundColor = "#FFFFFF";
+                }
+                gridContainer.appendChild(cell);
+            }
+
+            document.body.appendChild(gridContainer);
+
+        }
     </script>
 
-    <!-- YOUR GAME HERE -->
+    <!-- Game -->
     <script>
         // SETTINGS
-        horizontalResolution = 20;
-        verticalResolution = 20;
-        
+        horizontalResolution = 30;
+        verticalResolution = 10;
+
+        // create the display
         initDisplay(horizontalResolution,verticalResolution);
     </script>
 </body>
