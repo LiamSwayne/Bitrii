@@ -64,9 +64,12 @@
                 this.name = name;
                 this.index = index;
                 this.show = show;
+                this.sprites = {};
+
                 Layer.ordering.splice(index, 0, name); // Add layer to ordering
             }
 
+            // get the name of the previous layer
             prev() {
                 const prevIndex = this.index - 1;
                 if (prevIndex >= 0 && prevIndex < Layer.ordering.length) {
@@ -75,12 +78,32 @@
                 return null; // No previous layer
             }
 
+            // get the name of the next layer
             next() {
                 const nextIndex = this.index + 1;
                 if (nextIndex >= 0 && nextIndex < Layer.ordering.length) {
                     return Layer.ordering[nextIndex];
                 }
                 return null; // No next layer
+            }
+
+            // add or replace a sprite
+            // name is the sprite name
+            // sprite is a list of strings, with each string being a row of pixels
+            /* Ex:
+                addSprite("idle",""
+            */
+            addSprite(spriteName, sprite) {
+                    this.sprites[spriteName] = sprite;
+            }
+
+            // remove the sprite with matching name
+            removeSprite(spriteName) {
+                if (this.sprites[spriteName]) {
+                    delete this.sprites[spriteName];
+                } else {
+                    throw new Error(`sprite with name '${spriteName}' does not exist.`);
+                }
             }
         }
 
@@ -97,8 +120,8 @@
                 const windowWidth = window.innerWidth;
                 const cellSize = Math.min(windowHeight / yResolution, windowWidth / xResolution);
 
-                gridContainer.style.gridTemplateColumns = `repeat(${xResolution}, ${cellSize}px)`;
-                gridContainer.style.gridTemplateRows = `repeat(${yResolution}, ${cellSize}px)`;
+                gridContainer.style.gridTemplateColumns = 'repeat(' + xResolution + ', ' + cellSize + 'px)';
+                gridContainer.style.gridTemplateRows = 'repeat(' + yResolution + ', ' + cellSize + 'px)';
             }
 
             // scale grid to initial window size
@@ -128,6 +151,11 @@
         // SETTINGS
         const horizontalResolution = 40;
         const verticalResolution = 30;
+        key = { // translation of sprite character to hex codes
+            " ":"00000000", // transparent
+            "0":"000000", // black
+            "1":"FFFFFF" // white
+        }
 
         // create the display
         initDisplay(horizontalResolution,verticalResolution);
