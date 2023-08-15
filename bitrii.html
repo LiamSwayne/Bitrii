@@ -53,19 +53,13 @@
         gridContainer.style.gap = "0";
 
         // create display
-        function initDisplay(xResolution,yResolution) {
+        function initDisplay(xResolution, yResolution) {
 
             function scaleGrid() {
                 const windowHeight = window.innerHeight;
                 const windowWidth = window.innerWidth;
-                const minDimension = Math.min(windowHeight, windowWidth);
+                const cellSize = Math.min(windowHeight / yResolution, windowWidth / xResolution);
 
-                maxRes = xResolution;
-                if (yResolution > xResolution) {
-                    maxRes = yResolution;
-                }
-
-                const cellSize = minDimension / maxRes;
                 gridContainer.style.gridTemplateColumns = `repeat(${xResolution}, ${cellSize}px)`;
                 gridContainer.style.gridTemplateRows = `repeat(${yResolution}, ${cellSize}px)`;
             }
@@ -88,15 +82,14 @@
             }
 
             document.body.appendChild(gridContainer);
-
         }
     </script>
 
     <!-- Game -->
     <script>
         // SETTINGS
-        horizontalResolution = 30;
-        verticalResolution = 10;
+        horizontalResolution = 40;
+        verticalResolution = 20;
 
         // create the display
         initDisplay(horizontalResolution,verticalResolution);
