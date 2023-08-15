@@ -11,5 +11,7 @@ Roadmap:
 - [x] Display
 - [ ] Layer system
   - [ ] Base layer system
+    - [ ] Layers, ordering or layers, and ability to access previous and next layers
+    - [ ] Render layers to display
   - [ ] Collision groups (layers can collide with other layers in the same collision group)
   - [ ] Outline layers <details><summary></summary>Layers that are dynamic outlines of other layers.</details>
