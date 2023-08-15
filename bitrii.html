@@ -108,9 +108,9 @@
         }
 
         // create grid
-        gridContainer = document.createElement("div");
-        gridContainer.style.display = "grid";
-        gridContainer.style.gap = "0";
+        grid = document.createElement("div");
+        grid.style.display = "grid";
+        grid.style.gap = "0";
 
         // create display
         function initDisplay(xResolution, yResolution) {
@@ -120,8 +120,8 @@
                 const windowWidth = window.innerWidth;
                 const cellSize = Math.min(windowHeight / yResolution, windowWidth / xResolution);
 
-                gridContainer.style.gridTemplateColumns = 'repeat(' + xResolution + ', ' + cellSize + 'px)';
-                gridContainer.style.gridTemplateRows = 'repeat(' + yResolution + ', ' + cellSize + 'px)';
+                grid.style.gridTemplateColumns = 'repeat(' + xResolution + ', ' + cellSize + 'px)';
+                grid.style.gridTemplateRows = 'repeat(' + yResolution + ', ' + cellSize + 'px)';
             }
 
             // scale grid to initial window size
@@ -139,10 +139,10 @@
                 if (i == 0) {
                     cell.style.backgroundColor = "#FFFFFF";
                 }
-                gridContainer.appendChild(cell);
+                grid.appendChild(cell);
             }
 
-            document.body.appendChild(gridContainer);
+            document.body.appendChild(grid);
         }
     </script>
 
