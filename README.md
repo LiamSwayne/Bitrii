@@ -6,6 +6,8 @@ A free, open source, low barrier to entry, pixel art game engine for creating ga
 
 **Why HTML?** The games and engine are written in JavaScript, but are wrapped in an HTML file so they can be opened in web browsers by double-clicking. Also, games can be run on all computers and operating systems without additional effort on the part of game devs.
 
+To contribute, read [Contributing.md](./contributing.md)
+
 Roadmap:
 - [x] Fullscreen button
 - [x] Display
