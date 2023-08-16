@@ -52,12 +52,15 @@
             // the order of the layers
             static ordering = [];
 
+            // names of all layers
+            static names = [];
+
             // name is the name of the layer
             // index is the position of the layer, -1 becomes the front
             // show determines whether or not the layer is visible
             constructor(name, index=-1, show=true, x=0, y=0) {
                 // layers must have unique names
-                if (Layer.ordering.includes(name)) {
+                if (Layer.names.includes(name)) {
                     throw new Error('Layer with name \'' + name + '\' already exists.');
                 }
 
@@ -66,17 +69,23 @@
                 this.show = show;
                 this.x = x;
                 this.y = y;
-                this.sprite = [];
-                this.sprites = {};
+                this.sprite = ""; // the selected costume's name
+                this.costumes = {};
 
-                Layer.ordering.splice(index, 0, name); // Add layer to ordering
+                if (index === -1) {
+                    Layer.ordering.push(this); // Add layer to ordering at the end
+                    Layer.names.push(name); // Add name to end of name list
+                } else {
+                    Layer.ordering.splice(index, 0, this); // Add layer to ordering
+                    Layer.names.splice(index, 0, name); // Add name to name list
+                }
             }
 
             // get the name of the previous layer
             prev() {
                 const prevIndex = this.index - 1;
-                if (prevIndex >= 0 && prevIndex < Layer.ordering.length) {
-                    return Layer.ordering[prevIndex];
+                if (prevIndex >= 0 && prevIndex < Layer.names.length) {
+                    return Layer.names[prevIndex];
                 }
                 return null; // No previous layer
             }
@@ -84,33 +93,33 @@
             // get the name of the next layer
             next() {
                 const nextIndex = this.index + 1;
-                if (nextIndex >= 0 && nextIndex < Layer.ordering.length) {
-                    return Layer.ordering[nextIndex];
+                if (nextIndex >= 0 && nextIndex < Layer.names.length) {
+                    return Layer.names[nextIndex];
                 }
                 return null; // No next layer
             }
 
-            // add or replace a sprite
-            // name is the sprite name
-            // sprite is a list of strings, with each string being a row of pixels
+            // add or replace a costume
+            // name is the costume name
+            // costume is a list of strings, with each string being a row of pixels
             /* Ex, the Bitrii logo:
-                addSprite("logo",[
+                addCostume("logo",[
                     "111  1  1      1 1",
                     "1  1   111 1 1    ",
                     "111  1  1  11  1 1",
                     "1  1 1  1  1   1 1",
-                    "111  1  11 1   1 1"]
+                    "111  1  11 1   1 1"])
             */
-            addSprite(spriteName, sprite) {
-                this.sprites[spriteName] = sprite;
+            addCostume(costumeName, costume) {
+                this.costumes[costumeName] = costume;
             }
 
-            // remove the sprite with matching name
-            removeSprite(spriteName) {
-                if (this.sprites[spriteName]) {
-                    delete this.sprites[spriteName];
+            // remove the costume with matching name
+            removeCostume(costumeName) {
+                if (this.costumes[costumeName]) {
+                    delete this.costumes[costumeName];
                 } else {
-                    throw new Error(`sprite with name '${spriteName}' does not exist.`);
+                    throw new Error('costume with name \'' + costumeName + '\' does not exist.');
                 }
             }
 
@@ -126,8 +135,14 @@
         grid.style.display = "grid";
         grid.style.gap = "0";
 
+        let xRes;
+        let yRes;
+
         // create display
         function initDisplay(xResolution, yResolution) {
+
+            xRes = xResolution;
+            yRes = yResolution;
 
             function scaleGrid() {
                 const windowHeight = window.innerHeight;
@@ -160,11 +175,31 @@
 
             // create the variable used to access cells
             cells = grid.querySelectorAll("div"); // Get all the cells in the grid
+            
+            // get number of cells
+            cellCount = cells.length;
         }
 
         // update frame
         function update() {
-            // Process the current cell
+
+            frame = Array(yRes).fill(" ".repeat(xRes));
+            console.log(frame);
+            
+            for (let i = 0; i < Layer.ordering.length; i++) {
+                if (Layer.ordering[i].show === true && Layer.ordering[i].sprite !== "") {
+                    let sprite = Layer.ordering[i].costumes[Layer.ordering[i].sprite];
+                    for (let j = 0; j < sprite.length; j++) {
+                        for (let k = 0; k < sprite[j].length; k++) {
+                            frame[j][k] = sprite[j][k]
+                        }
+                    }
+                }                
+            }
+
+            // TODO: frame does not update currently
+            console.log(frame);
+
             cells[0].style.backgroundColor = key[" "]; // For example, change the cell color
         }
     </script>
@@ -175,11 +210,26 @@
         const horizontalResolution = 40;
         const verticalResolution = 30;
         const framerate = 10;
-        key = { // translation of sprite characters to hex codes
+        key = { // translation of costume characters to hex codes
             " ":"#00000000", // transparent
             "0":"#000000", // black
             "1":"#FFFFFF" // white
         }
+
+        // START OF TEST CODE
+
+        // Example usage:
+        const logo = new Layer("logo"); // Create a new layer
+        logo.addCostume("logoTiny", [
+            "111  1  1      1 1",
+            "1  1   111 1 1    ",
+            "111  1  1  11  1 1",
+            "1  1 1  1  1   1 1",
+            "111  1  11 1   1 1"
+        ]); // Add a costume to the layer
+        logo.sprite = "logoTiny"
+
+        // END OF TEST CODE
 
         // create the display
         initDisplay(horizontalResolution,verticalResolution);
