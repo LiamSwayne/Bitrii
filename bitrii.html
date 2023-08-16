@@ -165,7 +165,7 @@
         // update frame
         function update() {
             // Process the current cell
-            cells[0].style.backgroundColor = "#" + key[" "]; // For example, change the cell color
+            cells[0].style.backgroundColor = key[" "]; // For example, change the cell color
         }
     </script>
 
@@ -176,9 +176,9 @@
         const verticalResolution = 30;
         const framerate = 10;
         key = { // translation of sprite characters to hex codes
-            " ":"00000000", // transparent
-            "0":"000000", // black
-            "1":"FFFFFF" // white
+            " ":"#00000000", // transparent
+            "0":"#000000", // black
+            "1":"#FFFFFF" // white
         }
 
         // create the display
