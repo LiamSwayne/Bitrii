@@ -185,20 +185,23 @@
 
             frame = Array(yRes).fill(" ".repeat(xRes));
             console.log(frame);
-            
+
             for (let i = 0; i < Layer.ordering.length; i++) {
                 if (Layer.ordering[i].show === true && Layer.ordering[i].sprite !== "") {
                     let sprite = Layer.ordering[i].costumes[Layer.ordering[i].sprite];
                     for (let j = 0; j < sprite.length; j++) {
                         for (let k = 0; k < sprite[j].length; k++) {
-                            frame[j][k] = sprite[j][k]
+                            if (sprite[j][k] !== " ") {
+                                frame[j] = frame[j].substring(0, k) + sprite[j][k] + frame[j].substring(k + 1);
+                            }
                         }
                     }
-                }                
+                }
             }
 
-            // TODO: frame does not update currently
+            // Now the 'frame' array should be updated correctly with sprite characters
             console.log(frame);
+
 
             cells[0].style.backgroundColor = key[" "]; // For example, change the cell color
         }
