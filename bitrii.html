@@ -201,9 +201,14 @@
 
             // Now the 'frame' array should be updated correctly with sprite characters
             console.log(frame);
-
-
-            cells[0].style.backgroundColor = key[" "]; // For example, change the cell color
+            
+            for (let j = 0; j < frame.length; j++) {
+                for (let k = 0; k < frame[j].length; k++) {
+                    if (frame[j][k] !== " ") {
+                        cells[(j*xRes)+k].style.backgroundColor = key[frame[j][k]];
+                    }
+                }
+            }
         }
     </script>
 
