@@ -157,6 +157,14 @@
 
             document.body.appendChild(grid);
         }
+
+        // update frame
+        function update() {
+            const cells = grid.querySelectorAll("div"); // Get all the cells in the grid
+
+            // Process the current cell
+            cells[0].style.backgroundColor = "#" + key[""]; // For example, change the cell color
+        }
     </script>
 
     <!-- Game -->
@@ -172,6 +180,9 @@
 
         // create the display
         initDisplay(horizontalResolution,verticalResolution);
+
+        update();
+
     </script>
 </body>
 </html>
