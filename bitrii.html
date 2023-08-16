@@ -66,6 +66,7 @@
                 this.show = show;
                 this.x = x;
                 this.y = y;
+                this.sprite = [];
                 this.sprites = {};
 
                 Layer.ordering.splice(index, 0, name); // Add layer to ordering
@@ -156,14 +157,15 @@
             }
 
             document.body.appendChild(grid);
+
+            // create the variable used to access cells
+            cells = grid.querySelectorAll("div"); // Get all the cells in the grid
         }
 
         // update frame
         function update() {
-            const cells = grid.querySelectorAll("div"); // Get all the cells in the grid
-
             // Process the current cell
-            cells[0].style.backgroundColor = "#" + key[""]; // For example, change the cell color
+            cells[0].style.backgroundColor = "#" + key[" "]; // For example, change the cell color
         }
     </script>
 
@@ -172,6 +174,7 @@
         // SETTINGS
         const horizontalResolution = 40;
         const verticalResolution = 30;
+        const framerate = 10;
         key = { // translation of sprite characters to hex codes
             " ":"00000000", // transparent
             "0":"000000", // black
@@ -180,8 +183,7 @@
 
         // create the display
         initDisplay(horizontalResolution,verticalResolution);
-
-        update();
+        setInterval(update, 1000 / framerate)
 
     </script>
 </body>
