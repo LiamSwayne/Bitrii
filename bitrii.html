@@ -101,7 +101,8 @@
 
             // add or replace a costume
             // name is the costume name
-            // costume is a list of strings, with each string being a row of pixels
+            // costume is a list of strings, with each string being a row of characters from the key
+            // if the sprite is blank, it is set to the added costume
             /* Ex, the Bitrii logo:
                 addCostume("logo",[
                     "111  1  1      1 1",
@@ -112,6 +113,9 @@
             */
             addCostume(costumeName, costume) {
                 this.costumes[costumeName] = costume;
+                if (this.sprite === "") {
+                    this.sprite = costumeName;
+                }
             }
 
             // remove the costume with matching name
@@ -159,10 +163,10 @@
             // scale the grid every time the window is resized
             window.addEventListener("resize", scaleGrid);
 
-            // TODO: replace with startup animation and utilize layer rendering
+            // TODO: replace with startup animation and utilize layer rendering, and make it adapt to the x and y res
             for (let i = 0; i < xResolution * yResolution; i++) {
                 const cell = document.createElement("div");
-                cell.style.backgroundColor = "#AAAAAA";
+                cell.style.backgroundColor = "#000000";
 
                 // example of how to change the color of a grid element
                 if (i == 0) {
@@ -181,10 +185,9 @@
         }
 
         // update frame
-        function update() {
+        function renderFrame() {
 
             frame = Array(yRes).fill(" ".repeat(xRes));
-            console.log(frame);
 
             for (let i = 0; i < Layer.ordering.length; i++) {
                 if (Layer.ordering[i].show === true && Layer.ordering[i].sprite !== "") {
@@ -217,32 +220,62 @@
         // SETTINGS
         const horizontalResolution = 40;
         const verticalResolution = 30;
-        const framerate = 10;
+        const framerate = 60;
         key = { // translation of costume characters to hex codes
             " ":"#00000000", // transparent
             "0":"#000000", // black
             "1":"#FFFFFF" // white
         }
 
+        // background layer, can be removed, set to an array of pixels, or filled with a single color using an Array
+        const background = new Layer("background");
+        background.addCostume("blackBackground",Array(verticalResolution).fill("0".repeat(horizontalResolution)));
+
+        // create the display
+        initDisplay(horizontalResolution,verticalResolution);
+
+        // the main loop, executes at once per frame
+        function update() {
+            // render the frame
+            renderFrame();
+        }
+
+        // 
+        setInterval(update, 1000 / framerate)
+
         // START OF TEST CODE
 
-        // Example usage:
-        const logo = new Layer("logo"); // Create a new layer
+        // replace the background layer with grey so the frame can be distinguished from the background (and screen warping will be noticable)
+        // the key is modified, which normally is not recommended
+        key["2"] = "#333333"
+        background.removeCostume("blackBackground")
+        background.addCostume("greyBackground",Array(verticalResolution).fill("2".repeat(horizontalResolution)));
+        background.sprite = "greyBackground";
+
+        // Create a new layer
+        const logo = new Layer("logo");
+
+        // add costume to layer
         logo.addCostume("logoTiny", [
             "111  1  1      1 1",
             "1  1   111 1 1    ",
             "111  1  1  11  1 1",
             "1  1 1  1  1   1 1",
             "111  1  11 1   1 1"
-        ]); // Add a costume to the layer
-        logo.sprite = "logoTiny"
+        ]);
+
+        // add costume to layer
+        logo.addCostume("logoLong", [
+            " 111  1  1      1 1 1 1",
+            " 1  1   111 1 1     ",
+            " 111  1  1  11  1 1 1 1",
+            " 1  1 1  1  1   1 1 1 1",
+            " 111  1  11 1   1 1 1 1"
+        ]);
+
+        setTimeout(() => { logo.sprite = "logoLong"; }, 3000);
 
         // END OF TEST CODE
-
-        // create the display
-        initDisplay(horizontalResolution,verticalResolution);
-        setInterval(update, 1000 / framerate)
-
     </script>
 </body>
 </html>
