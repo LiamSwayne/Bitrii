@@ -187,7 +187,7 @@
         // update frame
         function renderFrame() {
 
-            frame = Array(yRes).fill(" ".repeat(xRes));
+            frame = Array(yRes).fill(key[backgroundColor].repeat(xRes));
 
             for (let i = 0; i < Layer.ordering.length; i++) {
                 if (Layer.ordering[i].show === true && Layer.ordering[i].sprite !== "") {
@@ -226,10 +226,7 @@
             "0":"#000000", // black
             "1":"#FFFFFF" // white
         }
-
-        // background layer, can be removed, set to an array of pixels, or filled with a single color using an Array
-        const background = new Layer("background");
-        background.addCostume("blackBackground",Array(verticalResolution).fill("0".repeat(horizontalResolution)));
+        backgroundColor = "0"; // set to transparent and frames will write over other frames
 
         // create the display
         initDisplay(horizontalResolution,verticalResolution);
