@@ -14,7 +14,8 @@ Roadmap:
 - [ ] Layer system
   - [ ] Base layer system
     - [x] Layers, ordering or layers, and ability to access previous and next layers
-    - [ ] Render layers to display
+    - [x] Render layers to display
     - [ ] Experiment with image generation rather than cells <details><summary></summary>Currently every pixel is a div, but creating an image and setting the pixels in that image to specific values may yield astronomical performance gains.</details>
+    - [ ] Create startup animation <details><summary></summary>does not use layer system, instead is built from scratch and runs in a for loop)</details>
   - [ ] Collision groups (layers can collide with other layers in the same collision group)
   - [ ] Outline layers <details><summary></summary>Layers that are dynamic outlines of other layers.</details>
