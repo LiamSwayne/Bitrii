@@ -55,7 +55,7 @@
             // name is the name of the layer
             // index is the position of the layer, -1 becomes the front
             // show determines whether or not the layer is visible
-            constructor(name, index=-1, show=true) {
+            constructor(name, index=-1, show=true, x=0, y=0) {
                 // layers must have unique names
                 if (Layer.ordering.includes(name)) {
                     throw new Error('Layer with name \'' + name + '\' already exists.');
@@ -64,6 +64,8 @@
                 this.name = name;
                 this.index = index;
                 this.show = show;
+                this.x = x;
+                this.y = y;
                 this.sprites = {};
 
                 Layer.ordering.splice(index, 0, name); // Add layer to ordering
@@ -90,11 +92,16 @@
             // add or replace a sprite
             // name is the sprite name
             // sprite is a list of strings, with each string being a row of pixels
-            /* Ex:
-                addSprite("idle",""
+            /* Ex, the Bitrii logo:
+                addSprite("logo",[
+                    "111  1  1      1 1",
+                    "1  1   111 1 1    ",
+                    "111  1  1  11  1 1",
+                    "1  1 1  1  1   1 1",
+                    "111  1  11 1   1 1"]
             */
             addSprite(spriteName, sprite) {
-                    this.sprites[spriteName] = sprite;
+                this.sprites[spriteName] = sprite;
             }
 
             // remove the sprite with matching name
@@ -104,6 +111,12 @@
                 } else {
                     throw new Error(`sprite with name '${spriteName}' does not exist.`);
                 }
+            }
+
+            // move the layer
+            move(x=0,y=0) {
+                this.x += x;
+                this.y += y;
             }
         }
 
