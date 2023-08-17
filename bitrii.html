@@ -187,7 +187,7 @@
         // update frame
         function renderFrame() {
 
-            frame = Array(yRes).fill(key[backgroundColor].repeat(xRes));
+            frame = Array(yRes).fill(backgroundColor.repeat(xRes));
 
             for (let i = 0; i < Layer.ordering.length; i++) {
                 if (Layer.ordering[i].show === true && Layer.ordering[i].sprite !== "") {
@@ -226,7 +226,7 @@
             "0":"#000000", // black
             "1":"#FFFFFF" // white
         }
-        backgroundColor = "0"; // set to transparent and frames will write over other frames
+        backgroundColor = "0";
 
         // create the display
         initDisplay(horizontalResolution,verticalResolution);
@@ -242,13 +242,6 @@
 
         // START OF TEST CODE
 
-        // replace the background layer with grey so the frame can be distinguished from the background (and screen warping will be noticable)
-        // the key is modified, which normally is not recommended
-        key["2"] = "#333333"
-        background.removeCostume("blackBackground")
-        background.addCostume("greyBackground",Array(verticalResolution).fill("2".repeat(horizontalResolution)));
-        background.sprite = "greyBackground";
-
         // Create a new layer
         const logo = new Layer("logo");
 
@@ -263,11 +256,11 @@
 
         // add costume to layer
         logo.addCostume("logoLong", [
-            " 111  1  1      1 1 1 1",
-            " 1  1   111 1 1     ",
-            " 111  1  1  11  1 1 1 1",
-            " 1  1 1  1  1   1 1 1 1",
-            " 111  1  11 1   1 1 1 1"
+            "1111  1  1      1 1 1 1",
+            "1   1   111 1 1     ",
+            "1111  1  1  11  1 1 1 1",
+            "1   1 1  1  1   1 1 1 1",
+            "1111  1  11 1   1 1 1 1"
         ]);
 
         setTimeout(() => { logo.sprite = "logoLong"; }, 3000);
