@@ -237,10 +237,14 @@
             renderFrame();
         }
 
-        // 
+        // start running the update loop
         setInterval(update, 1000 / framerate)
 
         // START OF TEST CODE
+
+        // switch background to grey color to make the display distinguishable from the background
+        key["2"] = "#333333";
+        backgroundColor = "2";
 
         // Create a new layer
         const logo = new Layer("logo");
