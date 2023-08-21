@@ -20,256 +20,229 @@
 
 <!-- Fullscreen functionality -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const svg = document.querySelector("svg");
+document.addEventListener("DOMContentLoaded", function() {
+    const svg = document.querySelector("svg");
 
-        svg.addEventListener("click", () => {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) {
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-                document.documentElement.msRequestFullscreen();
-            }
+    svg.addEventListener("click", () => {
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        } else if (document.documentElement.mozRequestFullScreen) {
+            document.documentElement.mozRequestFullScreen();
+        } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+        }
 
-            svg.style.display = "none";
-        });
-
-        document.addEventListener("fullscreenchange", () => {
-            if (!document.fullscreenElement) {
-                svg.style.display = "block";
-            }
-        });
+        svg.style.display = "none";
     });
+
+    document.addEventListener("fullscreenchange", () => {
+        if (!document.fullscreenElement) {
+            svg.style.display = "block";
+        }
+    });
+});
 </script>
 
 <!-- Engine -->
 <script>
-    // layers are entities that are drawn to the display
-    class Layer {
-        // the order of the layers
-        static ordering = [];
+// layers are entities that are drawn to the display
+class Layer {
+    // the order of the layers
+    static ordering = [];
 
-        // names of all layers
-        static names = [];
+    // names of all layers
+    static names = [];
 
-        // name is the name of the layer
-        // index is the position of the layer, -1 becomes the front
-        // show determines whether or not the layer is visible
-        constructor(name, index=-1, show=true, x=0, y=0) {
-            // layers must have unique names
-            if (Layer.names.includes(name)) {
-                throw new Error('Layer with name \'' + name + '\' already exists.');
-            }
-
-            this.name = name;
-            this.index = index;
-            this.show = show;
-            this.x = x;
-            this.y = y;
-            this.sprite = ""; // the selected costume's name
-            this.costumes = {};
-
-            if (index === -1) {
-                Layer.ordering.push(this); // Add layer to ordering at the end
-                Layer.names.push(name); // Add name to end of name list
-            } else {
-                Layer.ordering.splice(index, 0, this); // Add layer to ordering
-                Layer.names.splice(index, 0, name); // Add name to name list
-            }
+    // name is the name of the layer
+    // index is the position of the layer, -1 becomes the front
+    // show determines whether or not the layer is visible
+    constructor(name, index=-1, show=true, x=0, y=0) {
+        // layers must have unique names
+        if (Layer.names.includes(name)) {
+            throw new Error('Layer with name \'' + name + '\' already exists.');
         }
 
-        // get the name of the previous layer
-        prev() {
-            const prevIndex = this.index - 1;
-            if (prevIndex >= 0 && prevIndex < Layer.names.length) {
-                return Layer.names[prevIndex];
-            }
-            return null; // No previous layer
-        }
+        this.name = name;
+        this.index = index;
+        this.show = show;
+        this.x = x;
+        this.y = y;
+        this.sprite = ""; // the selected costume's name
+        this.costumes = {};
 
-        // get the name of the next layer
-        next() {
-            const nextIndex = this.index + 1;
-            if (nextIndex >= 0 && nextIndex < Layer.names.length) {
-                return Layer.names[nextIndex];
-            }
-            return null; // No next layer
-        }
-
-        // add or replace a costume
-        // name is the costume name
-        // costume is a list of strings, with each string being a row of characters from the key
-        // if the sprite is blank, it is set to the added costume
-        /* Ex, the Bitrii logo:
-            addCostume("logo",[
-                "111  1  1      1 1",
-                "1  1   111 1 1    ",
-                "111  1  1  11  1 1",
-                "1  1 1  1  1   1 1",
-                "111  1  11 1   1 1"])
-        */
-        addCostume(costumeName, costume) {
-            this.costumes[costumeName] = costume;
-            if (this.sprite === "") {
-                this.sprite = costumeName;
-            }
-        }
-
-        // remove the costume with matching name
-        removeCostume(costumeName) {
-            if (this.costumes[costumeName]) {
-                delete this.costumes[costumeName];
-            } else {
-                throw new Error('costume with name \'' + costumeName + '\' does not exist.');
-            }
-        }
-
-        // move the layer
-        move(x=0,y=0) {
-            this.x += x;
-            this.y += y;
+        if (index === -1) {
+            Layer.ordering.push(this); // Add layer to ordering at the end
+            Layer.names.push(name); // Add name to end of name list
+        } else {
+            Layer.ordering.splice(index, 0, this); // Add layer to ordering
+            Layer.names.splice(index, 0, name); // Add name to name list
         }
     }
 
-    // create grid
-    grid = document.createElement("div");
-    grid.style.display = "grid";
-    grid.style.gap = "0";
-
-    let xRes;
-    let yRes;
-
-    // create display
-    function initDisplay(xResolution, yResolution) {
-
-        xRes = xResolution;
-        yRes = yResolution;
-
-        function scaleGrid() {
-            const windowHeight = window.innerHeight;
-            const windowWidth = window.innerWidth;
-            const cellSize = Math.min(windowHeight / yResolution, windowWidth / xResolution);
-
-            grid.style.gridTemplateColumns = 'repeat(' + xResolution + ', ' + cellSize + 'px)';
-            grid.style.gridTemplateRows = 'repeat(' + yResolution + ', ' + cellSize + 'px)';
+    // get the name of the previous layer
+    prev() {
+        const prevIndex = this.index - 1;
+        if (prevIndex >= 0 && prevIndex < Layer.names.length) {
+            return Layer.names[prevIndex];
         }
-
-        // scale grid to initial window size
-        scaleGrid();
-
-        // scale the grid every time the window is resized
-        window.addEventListener("resize", scaleGrid);
-
-        // TODO: replace with startup animation and utilize layer rendering, and make it adapt to the x and y res
-        for (let i = 0; i < xResolution * yResolution; i++) {
-            const cell = document.createElement("div");
-            cell.style.backgroundColor = "#000000";
-
-            // example of how to change the color of a grid element
-            if (i == 0) {
-                cell.style.backgroundColor = "#FFFFFF";
-            }
-            grid.appendChild(cell);
-        }
-
-        document.body.appendChild(grid);
-
-        // create the variable used to access cells
-        cells = grid.querySelectorAll("div"); // Get all the cells in the grid
-        
-        // get number of cells
-        cellCount = cells.length;
+        return null; // No previous layer
     }
 
-    // update frame
-    function renderFrame() {
+    // get the name of the next layer
+    next() {
+        const nextIndex = this.index + 1;
+        if (nextIndex >= 0 && nextIndex < Layer.names.length) {
+            return Layer.names[nextIndex];
+        }
+        return null; // No next layer
+    }
 
-        frame = Array(yRes).fill(backgroundColor.repeat(xRes));
+    // add or replace a costume
+    // name is the costume name
+    // costume is a list of strings, with each string being a row of characters from the key
+    // if the sprite is blank, it is set to the added costume
+    /* Ex, the Bitrii logo:
+        addCostume("logo",[
+            "111  1  1      1 1",
+            "1  1   111 1 1    ",
+            "111  1  1  11  1 1",
+            "1  1 1  1  1   1 1",
+            "111  1  11 1   1 1"])
+    */
+    addCostume(costumeName, costume) {
+        this.costumes[costumeName] = costume;
+        if (this.sprite === "") {
+            this.sprite = costumeName;
+        }
+    }
 
-        for (let i = 0; i < Layer.ordering.length; i++) {
-            if (Layer.ordering[i].show === true && Layer.ordering[i].sprite !== "") {
-                let sprite = Layer.ordering[i].costumes[Layer.ordering[i].sprite];
-                for (let j = 0; j < sprite.length; j++) {
-                    for (let k = 0; k < sprite[j].length; k++) {
-                        if (sprite[j][k] !== " ") {
-                            frame[j] = frame[j].substring(0, k) + sprite[j][k] + frame[j].substring(k + 1);
-                        }
+    // remove the costume with matching name
+    removeCostume(costumeName) {
+        if (this.costumes[costumeName]) {
+            delete this.costumes[costumeName];
+        } else {
+            throw new Error('costume with name \'' + costumeName + '\' does not exist.');
+        }
+    }
+
+    // move the layer
+    move(x=0,y=0) {
+        this.x += x;
+        this.y += y;
+    }
+}
+
+// Create an image element
+const image = document.createElement("img");
+document.body.appendChild(image);
+
+let xRes;
+let yRes;
+let canvas;
+let context;
+
+function initDisplay(xResolution, yResolution) {
+    xRes = xResolution;
+    yRes = yResolution;
+
+    canvas = document.createElement("canvas");
+    canvas.width = xResolution;
+    canvas.height = yResolution;
+    context = canvas.getContext("2d");
+}
+
+function renderFrame() {
+    // Calculate the scaling factors
+    const scaleX = window.innerWidth / xRes;
+    const scaleY = window.innerHeight / yRes;
+    const scale = Math.min(scaleX, scaleY);
+
+    // Update the image size and set pixelated rendering
+    image.style.width = xRes * scale + "px";
+    image.style.height = yRes * scale + "px";
+    image.style.imageRendering = "pixelated"; // Set pixelated rendering
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < Layer.ordering.length; i++) {
+        if (Layer.ordering[i].show === true && Layer.ordering[i].sprite !== "") {
+            let sprite = Layer.ordering[i].costumes[Layer.ordering[i].sprite];
+            for (let j = 0; j < sprite.length; j++) {
+                for (let k = 0; k < sprite[j].length; k++) {
+                    if (sprite[j][k] !== " ") {
+                        context.fillStyle = key[sprite[j][k]];
+                        context.fillRect(k, j, 1, 1);
                     }
                 }
             }
         }
-
-        // Now the 'frame' array should be updated correctly with sprite characters
-        console.log(frame);
-        
-        for (let j = 0; j < frame.length; j++) {
-            for (let k = 0; k < frame[j].length; k++) {
-                if (frame[j][k] !== " ") {
-                    cells[(j*xRes)+k].style.backgroundColor = key[frame[j][k]];
-                }
-            }
-        }
     }
+
+    // Draw the canvas onto the image element
+    image.src = canvas.toDataURL();
+
+    // Call renderFrame again after a delay
+    requestAnimationFrame(renderFrame);
+}
 </script>
 
 <!-- Game -->
 <script>
-    // SETTINGS
-    const horizontalResolution = 40;
-    const verticalResolution = 30;
-    const framerate = 60;
-    key = { // translation of costume characters to hex codes
-        " ":"#00000000", // transparent
-        "0":"#000000", // black
-        "1":"#FFFFFF" // white
-    }
-    backgroundColor = "0";
+// SETTINGS
+const horizontalResolution = 400;
+const verticalResolution = 300;
+const framerate = 60;
+key = { // translation of costume characters to hex codes
+    " ":"#00000000", // transparent
+    "0":"#000000", // black
+    "1":"#FFFFFF" // white
+}
+backgroundColor = "0";
 
-    // create the display
-    initDisplay(horizontalResolution,verticalResolution);
+// create the display
+initDisplay(horizontalResolution,verticalResolution);
 
-    // the main loop, executes at once per frame
-    function update() {
-        // render the frame
-        renderFrame();
-    }
+// the main loop, executes at once per frame
+function update() {
+    // render the frame
+    renderFrame();
+}
 
-    // start running the update loop
-    setInterval(update, 1000 / framerate)
+// start running the update loop
+setInterval(update, 1000 / framerate)
 
-    // START OF TEST CODE
+// START OF TEST CODE
 
-    // switch background to grey color to make the display distinguishable from the background
-    key["2"] = "#333333";
-    backgroundColor = "2";
+// switch background to grey color to make the display distinguishable from the background
+key["2"] = "#333333";
+backgroundColor = "2";
 
-    // Create a new layer
-    const logo = new Layer("logo");
+// Create a new layer
+const logo = new Layer("logo");
 
-    // add costume to layer
-    logo.addCostume("logoTiny", [
-        "111  1  1      1 1",
-        "1  1   111 1 1    ",
-        "111  1  1  11  1 1",
-        "1  1 1  1  1   1 1",
-        "111  1  11 1   1 1"
-    ]);
+// add costume to layer
+logo.addCostume("logoTiny", [
+    "111  1  1      1 1",
+    "1  1   111 1 1    ",
+    "111  1  1  11  1 1",
+    "1  1 1  1  1   1 1",
+    "111  1  11 1   1 1"
+]);
 
-    // add costume to layer
-    logo.addCostume("logoLong", [
-        "1111  1  1      1 1",
-        "1   1   111 1 1",
-        "1111  1  1  11  1 1",
-        "1   1 1  1  1   1 1",
-        "1111  1  11 1   1 1 1 1 1"
-    ]);
+// add costume to layer
+logo.addCostume("logoLong", [
+    "1111  1  1      1 1",
+    "1   1   111 1 1",
+    "1111  1  1  11  1 1",
+    "1   1 1  1  1   1 1",
+    "1111  1  11 1   1 1 1 1 1"
+]);
 
-    setTimeout(() => { logo.sprite = "logoLong"; }, 3000);
+setTimeout(() => { logo.sprite = "logoLong"; }, 3000);
 
-    // END OF TEST CODE
+// END OF TEST CODE
 </script>
 </body>
 </html>
