@@ -1,2 +1,5 @@
-.DS_Store #MacOS file explorer formatting
-.tmp.driveupload #Google Drive syncing resource
+#MacOS file explorer formatting
+.DS_Store
+
+#Google Drive syncing resource
+.tmp.driveupload
