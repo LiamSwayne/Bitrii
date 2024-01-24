@@ -1,6 +1,6 @@
 # Bitrii
 
-A free, open source, low barrier to entry, pixel art game engine for creating games that run in one HTML file.
+A free, open source, low barrier to entry, pixel art rendering engine for creating games that run in one HTML file.
 
 **Why one file?** Single file games are easy to share and host online.
 
