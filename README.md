@@ -1,10 +1,10 @@
 # Bitrii
 
-A free, open source, low barrier to entry, pixel art rendering engine for creating games that run in one HTML file.
+A free, open source, low barrier to entry, pixel art rendering engine for creating animations that run in one HTML file.
 
-**Why one file?** Single file games are easy to share and host online.
+**Why one file?** Single file animations are easy to share and host online.
 
-**Why HTML?** The games and engine are written in JavaScript, but are wrapped in an HTML file so they can be opened in web browsers by double-clicking. Also, games can be run on all computers and operating systems without additional effort on the part of game devs.
+**Why HTML?** The engine is written in JavaScript, but wrapped in an HTML file so it can be opened in web browsers by double-clicking. Also, animations can be run on all computers and operating systems without additional effort on the part of devs.
 
 To contribute, read [CONTRIBUTING.md](./CONTRIBUTING.md)
 
